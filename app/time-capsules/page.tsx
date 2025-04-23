@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -40,10 +40,16 @@ export default function TimeCapsulePage() {
   const [timeCapsules, setTimeCapsules] = useState<TimeCapsule[]>([])
   const [selectedCapsule, setSelectedCapsule] = useState<TimeCapsule | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
+  const [isMounted, setIsMounted] = useState(false)
+
+  // Set isMounted to true after component mounts
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   const getCurrentLocation = () => {
     setError(null)
-    if (navigator.geolocation) {
+    if (typeof navigator !== "undefined" && navigator.geolocation) {
       setIsLoading(true)
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -233,7 +239,7 @@ export default function TimeCapsulePage() {
                       onClick={getCurrentLocation}
                       variant="outline"
                       className="w-full flex items-center gap-2"
-                      disabled={isLoading}
+                      disabled={isLoading || !isMounted}
                     >
                       <Compass className="h-4 w-4" />
                       {isLoading ? "Getting location..." : "Use My Current Location"}
@@ -415,14 +421,16 @@ export default function TimeCapsulePage() {
         <TabsContent value="view" className="space-y-6">
           <Card>
             <CardContent className="p-0">
-              <MapComponent
-                center={[location.lat, location.lon]}
-                markers={timeCapsules.map((capsule) => ({
-                  position: [capsule.lat, capsule.lon],
-                  title: `Time Capsule: ${new Date(capsule.timestamp).toLocaleDateString()}`,
-                  popup: `<strong>Time Capsule</strong><br/>Created: ${new Date(capsule.timestamp).toLocaleString()}`,
-                }))}
-              />
+              {isMounted && (
+                <MapComponent
+                  center={[location.lat, location.lon]}
+                  markers={timeCapsules.map((capsule) => ({
+                    position: [capsule.lat, capsule.lon],
+                    title: `Time Capsule: ${new Date(capsule.timestamp).toLocaleDateString()}`,
+                    popup: `<strong>Time Capsule</strong><br/>Created: ${new Date(capsule.timestamp).toLocaleString()}`,
+                  }))}
+                />
+              )}
             </CardContent>
           </Card>
 

@@ -43,10 +43,16 @@ export default function ExplorePage() {
   const [scienceLocations, setScienceLocations] = useState<ScienceLocation[]>([])
   const [weatherData, setWeatherData] = useState<any>(null)
   const [isLoadingWeather, setIsLoadingWeather] = useState<boolean>(false)
+  const [isMounted, setIsMounted] = useState(false)
+
+  // Set isMounted to true after component mounts
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   const getCurrentLocation = () => {
     setError(null)
-    if (navigator.geolocation) {
+    if (typeof navigator !== "undefined" && navigator.geolocation) {
       setIsLoading(true)
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -301,10 +307,10 @@ export default function ExplorePage() {
   }
 
   useEffect(() => {
-    if (location.lat && location.lon) {
+    if (isMounted && location.lat && location.lon) {
       fetchWeatherData()
     }
-  }, [location])
+  }, [location, isMounted])
 
   return (
     <div className="container py-8 px-4 md:px-6 max-w-7xl mx-auto">
@@ -332,7 +338,7 @@ export default function ExplorePage() {
                   onClick={getCurrentLocation}
                   variant="outline"
                   className="w-full flex items-center gap-2"
-                  disabled={isLoading}
+                  disabled={isLoading || !isMounted}
                 >
                   <Compass className="h-4 w-4" />
                   {isLoading ? "Getting location..." : "Use My Current Location"}
@@ -439,14 +445,16 @@ export default function ExplorePage() {
         <div className="lg:col-span-2 space-y-6">
           <Card className="overflow-hidden">
             <CardContent className="p-0">
-              <MapComponent
-                center={[location.lat, location.lon]}
-                markers={scienceLocations.map((loc) => ({
-                  position: [loc.lat, loc.lon],
-                  title: loc.title,
-                  popup: `<strong>${loc.title}</strong><br/>${loc.distance} km away`,
-                }))}
-              />
+              {isMounted && (
+                <MapComponent
+                  center={[location.lat, location.lon]}
+                  markers={scienceLocations.map((loc) => ({
+                    position: [loc.lat, loc.lon],
+                    title: loc.title,
+                    popup: `<strong>${loc.title}</strong><br/>${loc.distance} km away`,
+                  }))}
+                />
+              )}
             </CardContent>
           </Card>
 
