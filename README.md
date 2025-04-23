@@ -107,10 +107,11 @@ cd geoscience-explorer
 npm install
 npm run dev
 ```
-## 🤝 Contributing
 
-Have a cool idea or want to improve the app?  
-We'd love to see your contributions!
+## 📢 Connect With Me
+
+- **X (Twitter)**: [@arsh1yasheoran](https://twitter.com/arsh1yasheoran)
+
 
 ## 📄 License
 
