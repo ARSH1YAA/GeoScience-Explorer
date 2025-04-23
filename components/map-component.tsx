@@ -28,8 +28,7 @@ function MapPlaceholder() {
 }
 
 export default function MapComponent(props: MapComponentProps) {
-  // Use state to track if we're in the browser
-  const [isMounted, setIsMounted] = useState(false)
+  const [isClient, setIsClient] = useState(false)
 
   // Dynamically import the map with ssr: false
   const DynamicMap = dynamic(() => import("./dynamic-map"), {
@@ -37,13 +36,13 @@ export default function MapComponent(props: MapComponentProps) {
     loading: MapPlaceholder,
   })
 
-  // Set isMounted to true after component mounts
+  // Set isClient to true after component mounts
   useEffect(() => {
-    setIsMounted(true)
+    setIsClient(true)
   }, [])
 
-  // Return placeholder if not mounted yet
-  if (!isMounted) {
+  // Return placeholder if not on client yet
+  if (!isClient) {
     return <MapPlaceholder />
   }
 

@@ -40,11 +40,11 @@ export default function TimeCapsulePage() {
   const [timeCapsules, setTimeCapsules] = useState<TimeCapsule[]>([])
   const [selectedCapsule, setSelectedCapsule] = useState<TimeCapsule | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
-  const [isMounted, setIsMounted] = useState(false)
+  const [isClient, setIsClient] = useState(false)
 
-  // Set isMounted to true after component mounts
+  // Set isClient to true after component mounts
   useEffect(() => {
-    setIsMounted(true)
+    setIsClient(true)
   }, [])
 
   const getCurrentLocation = () => {
@@ -239,7 +239,7 @@ export default function TimeCapsulePage() {
                       onClick={getCurrentLocation}
                       variant="outline"
                       className="w-full flex items-center gap-2"
-                      disabled={isLoading || !isMounted}
+                      disabled={isLoading || !isClient}
                     >
                       <Compass className="h-4 w-4" />
                       {isLoading ? "Getting location..." : "Use My Current Location"}
@@ -421,7 +421,7 @@ export default function TimeCapsulePage() {
         <TabsContent value="view" className="space-y-6">
           <Card>
             <CardContent className="p-0">
-              {isMounted && (
+              {isClient && (
                 <MapComponent
                   center={[location.lat, location.lon]}
                   markers={timeCapsules.map((capsule) => ({

@@ -1,9 +1,7 @@
 "use client"
 
-import { useEffect, useRef } from "react"
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet"
+import { useEffect, useRef, useState } from "react"
 import L from "leaflet"
-import "leaflet/dist/leaflet.css"
 
 // Define the props interfaces
 interface MapMarker {
@@ -17,52 +15,70 @@ interface MapComponentProps {
   markers?: MapMarker[]
 }
 
-// Custom component to handle map center changes
-function ChangeMapView({ center }: { center: [number, number] }) {
-  const map = useMap()
-  useEffect(() => {
-    map.setView(center, map.getZoom())
-  }, [center, map])
-  return null
-}
-
 export default function DynamicMap({ center, markers = [] }: MapComponentProps) {
-  const mapRef = useRef<L.Map | null>(null)
+  const mapRef = useRef<HTMLDivElement>(null)
+  const [mapInstance, setMapInstance] = useState<L.Map | null>(null)
+  const markersRef = useRef<L.Marker[]>([])
 
+  // Initialize the map
   useEffect(() => {
-    // Fix the 'icon not found' issue with Leaflet
-    delete (L.Icon.Default.prototype as any)._getIconUrl
+    // Import Leaflet CSS
+    import("leaflet/dist/leaflet.css")
 
-    L.Icon.Default.mergeOptions({
-      iconRetinaUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png",
-      iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
-      shadowUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png",
-    })
-  }, [])
+    // Only create the map if it doesn't exist yet and the ref is available
+    if (!mapInstance && mapRef.current) {
+      // Fix the 'icon not found' issue with Leaflet
+      delete (L.Icon.Default.prototype as any)._getIconUrl
 
-  return (
-    <div className="w-full h-[400px] rounded-md overflow-hidden">
-      <MapContainer
-        center={center}
-        zoom={13}
-        style={{ height: "100%", width: "100%" }}
-        ref={(map) => {
-          if (map) mapRef.current = map
-        }}
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
+      L.Icon.Default.mergeOptions({
+        iconRetinaUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png",
+        iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
+        shadowUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png",
+      })
 
-        {markers.map((marker, index) => (
-          <Marker key={index} position={marker.position}>
-            <Popup dangerouslySetInnerHTML={{ __html: marker.popup }} />
-          </Marker>
-        ))}
+      // Create the map
+      const map = L.map(mapRef.current).setView(center, 13)
 
-        <ChangeMapView center={center} />
-      </MapContainer>
-    </div>
-  )
+      // Add the tile layer
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(map)
+
+      // Store the map instance
+      setMapInstance(map)
+    }
+
+    // Cleanup function
+    return () => {
+      if (mapInstance) {
+        mapInstance.remove()
+        setMapInstance(null)
+      }
+    }
+  }, [mapInstance, center])
+
+  // Update the map center when it changes
+  useEffect(() => {
+    if (mapInstance) {
+      mapInstance.setView(center, mapInstance.getZoom())
+    }
+  }, [mapInstance, center])
+
+  // Add markers to the map
+  useEffect(() => {
+    if (mapInstance) {
+      // Clear existing markers
+      markersRef.current.forEach((marker) => marker.remove())
+      markersRef.current = []
+
+      // Add new markers
+      markers.forEach((marker) => {
+        const newMarker = L.marker(marker.position).addTo(mapInstance).bindPopup(marker.popup)
+
+        markersRef.current.push(newMarker)
+      })
+    }
+  }, [mapInstance, markers])
+
+  return <div ref={mapRef} className="w-full h-[400px] rounded-md overflow-hidden"></div>
 }
