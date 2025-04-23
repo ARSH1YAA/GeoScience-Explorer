@@ -1,51 +1,83 @@
 # 🌍 GeoScience Explorer
 
-**GeoScience Explorer** is an interactive web application that helps users discover science-related landmarks, historical sites, and real-time weather data based on their location or any coordinates worldwide.
+**GeoScience Explorer** is an interactive web application that combines geolocation with scientific data from various public APIs. It allows users to discover science-related landmarks, historical events, and environmental data based on their location or any coordinates worldwide.
 
-Built using public APIs and modern web technologies, this tool transforms maps into educational journeys—ideal for students, travelers, and curious minds.
-
-🔗 [Live Demo](https://geo-science-explorer.vercel.app)
+🔗 [Live Demo](https://geo-science-explorer.vercel.app/)
 
 ---
 
 ## ✨ Features
 
-- 📍 **Location-Based Discovery:** Use GPS or input coordinates to find nearby science-related places.
-- 🗺 **Interactive Map:** Explore articles via map markers and popups.
-- 🌦 **Weather Data:** View live weather using Open-Meteo API.
-- 📌 **Digital Time Capsules (Coming Soon):** Leave messages or discoveries on the map.
-- 🌓 **Theme Toggle:** Switch between light and dark modes.
+- 📍 Location-based scientific point discovery
+- 🗺️ Interactive maps with real-time marker rendering
+- 🌦️ Live weather data and forecasts
+- 🎒 Digital time capsules with user content (planned feature)
+- 🔄 Seamless theme toggling (light/dark)
 
 ---
 
-## 🛠 How It Works
+## ⚙️ How It Works
 
-1. The user selects a location using geolocation or manual input.
-2. The app fetches nearby points of interest using the **Wikipedia GeoSearch API**.
-3. Detailed data (images, summaries) is fetched via the **Wikipedia REST API**.
-4. The **Wikidata API** enriches this data with structured facts.
-5. Weather info is added using the **Open-Meteo API**.
-6. Locations are shown on a Leaflet-based map with rich popups.
+Here's a breakdown of the **workflow** inside GeoScience Explorer:
+
+### 1. **Location Input**
+Users can either:
+- Click “Use My Current Location” to auto-detect their position using the Geolocation API, or
+- Manually enter a city name or lat/lon coordinates.
+
+### 2. **Fetching Nearby Scientific Sites**
+- The app calls the **Wikipedia GeoSearch API** using the selected coordinates.
+- It filters results to highlight **scientific or historical significance**.
+
+### 3. **Data Enrichment**
+For each result:
+- The **Wikipedia REST API** fetches a brief summary, image, and URL.
+- Optionally, **Wikidata** enhances the data with structured metadata (e.g., dates, entity types).
+
+### 4. **Rendering on the Map**
+- Results are mapped using **Leaflet + React Leaflet**, with popups for summaries and quick links.
+
+### 5. **Live Weather Info**
+- Current weather for the selected coordinates is retrieved from **Open-Meteo** and displayed with icons.
+
+### 6. **Planned: Time Capsules**
+- Users will be able to drop digital messages (text/images) on the map at specific coordinates.
+- Capsules can be rediscovered by others exploring the same place.
 
 ---
 
-## ⚙️ Tech Stack
+## 🔌 Public APIs Used
 
-- **Next.js + React** – Web framework and UI components
-- **Tailwind CSS** – Styling and layout
-- **shadcn/ui** – UI component library
-- **Leaflet & React Leaflet** – Map and location display
-- **Public APIs:** Wikipedia GeoSearch, REST, Wikidata, Open-Meteo
+| API | Description | Usage |
+|-----|-------------|-------|
+| **Wikipedia GeoSearch API** | Finds nearby articles | Locate scientific landmarks |
+| **Wikipedia REST API** | Gets article summaries and images | Populate map info cards |
+| **Wikidata API** | Fetches structured data | Enhances landmark details |
+| **Open-Meteo API** | Live and forecasted weather | Shows local weather info |
 
 ---
 
-## 🔧 Installation
+## 🛠️ Technical Stack
 
-**Requirements:**
-- Node.js (v14+)
-- npm
+| Tech | Purpose |
+|------|---------|
+| **Next.js** | Routing, SSR, deployment |
+| **React** | UI components |
+| **Tailwind CSS** | Styling |
+| **shadcn/ui** | UI components built on Radix |
+| **Leaflet & React Leaflet** | Map rendering |
+| **Vercel** | Hosting and CI/CD |
 
-**Steps:**
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js (v14 or later)
+- npm or yarn
+
+### Installation
 
 ```bash
 git clone https://github.com/yourusername/geoscience-explorer.git
