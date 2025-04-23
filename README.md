@@ -106,8 +106,8 @@ For each result:
 ### Installation
 
 ```bash
-git clone https://github.com/yourusername/geoscience-explorer.git
-cd geoscience-explorer
+git clone https://github.com/ARSH1YAA/GeoScience-Explorer.git
+cd GeoScience-Explorer
 npm install
 npm run dev
 ```
