@@ -2,7 +2,11 @@
 
 **GeoScience Explorer** is an interactive web application that combines geolocation with scientific data from various public APIs. It allows users to discover science-related landmarks, historical events, and environmental data based on their location or any coordinates worldwide.
 
+![image](https://github.com/user-attachments/assets/7bef4e99-12a2-4444-91d2-1d4b65db7a4b)
+
+
 🔗 [Live Demo](https://geo-science-explorer.vercel.app/)
+
 
 ---
 
