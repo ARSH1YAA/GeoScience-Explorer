@@ -7,6 +7,12 @@
 
 🔗 [Live Demo](https://geo-science-explorer.vercel.app/)
 
+## 📽️ Demo Video
+
+[![Watch the video](https://img.youtube.com/vi/wxFraVEG0x0/hqdefault.jpg)](https://youtu.be/wxFraVEG0x0)
+
+
+
 
 ---
 
